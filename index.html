@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central Civil Services (Conduct) Rules, 1964 - Master Quiz</title>
+    <style>
+        :root {
+            --bg-dark: #050813;
+            --panel-bg: #0c1427;
+            --accent-gold: #ffd700;
+            --accent-cyan: #00e5ff;
+            --text-light: #f8fafc;
+            --correct-green: #10b981;
+            --wrong-red: #ef4444;
+            --border-glow: #1e3a8a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-image: radial-gradient(circle at center, #172554 0%, #050813 100%);
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 1250px;
+            background: var(--panel-bg);
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.25);
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            min-height: 700px;
+            overflow: hidden;
+        }
+
+        /* Left Side Panel */
+        .left-panel {
+            background: rgba(5, 8, 19, 0.95);
+            border-right: 2px solid var(--border-glow);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .panel-title {
+            color: var(--accent-gold);
+            font-size: 1.05rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .lifelines-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lifeline-btn, .nav-btn {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border: 1px solid var(--accent-cyan);
+            color: var(--text-light);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.92rem;
+        }
+
+        .lifeline-btn:hover:not(:disabled), .nav-btn:hover:not(:disabled) {
+            background: var(--accent-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        .lifeline-btn:disabled, .nav-btn:disabled {
+            background: #1f2937;
+            border-color: #374151;
+            color: #6b7280;
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
+        .nav-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .prev-btn {
+            border-color: #94a3b8;
+            background: linear-gradient(135deg, #334155, #1e293b);
+            color: #f1f5f9;
+        }
+
+        .prev-btn:hover:not(:disabled) {
+            background: #cbd5e1;
+            color: #000;
+            box-shadow: 0 0 12px #cbd5e1;
+        }
+
+        .next-btn {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, #78350f, #291203);
+            color: var(--accent-gold);
+        }
+
+        .next-btn:hover:not(:disabled) {
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-gold);
+        }
+
+        .prize-tracker {
+            flex-grow: 1;
+            overflow-y: auto;
+            max-height: 300px;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 3px;
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            padding: 8px;
+            background: #030712;
+        }
+
+        .prize-step {
+            font-size: 0.76rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            color: #64748b;
+        }
+
+        .prize-step.active {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        .prize-step.passed-correct {
+            color: var(--accent-cyan);
+            border-left: 2px solid var(--correct-green);
+        }
+
+        .prize-step.passed-wrong {
+            color: #94a3b8;
+            text-decoration: line-through;
+            border-left: 2px solid var(--wrong-red);
+        }
+
+        /* Main Game Area */
+        .main-panel {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .pattern-badge {
+            background: #1e3a8a;
+            color: #93c5fd;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #3b82f6;
+            text-transform: uppercase;
+        }
+
+        .question-box {
+            background: #090f1f;
+            border: 1px solid var(--border-glow);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            line-height: 1.5;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.05);
+        }
+
+        .statements-list {
+            margin-top: 12px;
+            margin-left: 10px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 15px;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 1.5px solid #1e293b;
+            color: var(--text-light);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.96rem;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent-cyan);
+            background: #1e293b;
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        .option-btn.correct {
+            background: var(--correct-green) !important;
+            border-color: #34d399 !important;
+            color: white;
+            animation: pulse 1s infinite alternate;
+        }
+
+        .option-btn.wrong {
+            background: var(--wrong-red) !important;
+            border-color: #f87171 !important;
+            color: white;
+        }
+
+        @keyframes pulse {
+            from { box-shadow: 0 0 5px var(--correct-green); }
+            to { box-shadow: 0 0 20px #34d399; }
+        }
+
+        .explanation-box {
+            background: #040814;
+            border-left: 4px solid var(--accent-cyan);
+            padding: 14px 18px;
+            border-radius: 6px;
+            font-size: 0.92rem;
+            color: #f1f5f9;
+            display: none;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--panel-bg);
+            border: 2px solid var(--accent-gold);
+            padding: 25px;
+            border-radius: 14px;
+            max-width: 540px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: var(--accent-gold);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+            line-height: 1.5;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
+
+        .close-btn {
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            padding: 10px 26px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .score-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #030712;
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+        }
+
+        .score-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .score-val-right {
+            font-size: 1.6rem;
+            color: var(--correct-green);
+        }
+
+        .score-val-wrong {
+            font-size: 1.6rem;
+            color: var(--wrong-red);
+        }
+
+        @media (max-width: 880px) {
+            .quiz-container { grid-template-columns: 1fr; }
+            .left-panel { border-right: none; border-bottom: 2px solid var(--border-glow); }
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <!-- Left Side Panel with Lifelines and Navigation Controls -->
+    <div class="left-panel">
+        <div class="panel-title">Hotseat Controls</div>
+        
+        <div class="lifelines-container">
+            <button class="lifeline-btn" id="life-5050" onclick="useFiftyFifty()">
+                <span>🌓</span> 50:50 Lifeline
+            </button>
+            <button class="lifeline-btn" id="life-poll" onclick="useAudiencePoll()">
+                <span>📊</span> Audience Poll
+            </button>
+            <button class="lifeline-btn" id="life-expert" onclick="useAskExpert()">
+                <span>🎓</span> Ask The Expert
+            </button>
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn prev-btn" id="prev-btn" onclick="prevQuestion()" disabled>
+                ◀ Back
+            </button>
+            <button class="nav-btn next-btn" id="next-btn" onclick="nextQuestion()" disabled>
+                Next ▶
+            </button>
+        </div>
+
+        <div class="panel-title" style="margin-top: 5px;">Prize Ladder</div>
+        <div class="prize-tracker" id="prize-tracker"></div>
+    </div>
+
+    <!-- Main Quiz Display Panel -->
+    <div class="main-panel">
+        <div>
+            <div class="question-header">
+                <div>
+                    <span id="q-number">Question 1 of 50</span>
+                    <span class="pattern-badge" id="pattern-badge">Pattern</span>
+                </div>
+                <span id="q-prize">Prize: ₹1,00,000</span>
+            </div>
+
+            <div class="question-box">
+                <div id="q-text">Loading question...</div>
+                <div class="statements-list" id="q-statements"></div>
+            </div>
+
+            <div class="options-grid" id="options-container"></div>
+        </div>
+
+        <div class="explanation-box" id="explanation-box">
+            <strong style="color: var(--accent-cyan);">Section Citation & Rule:</strong>
+            <div id="explanation-text" style="margin-top: 5px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Lifelines & Final Summary -->
+<div class="modal" id="info-modal">
+    <div class="modal-content">
+        <div class="modal-title" id="modal-title">Notice</div>
+        <div class="modal-body" id="modal-body"></div>
+        <button class="close-btn" id="modal-close-btn" onclick="closeModal()">Continue</button>
+    </div>
+</div>
+
+<script>
+// 50 Questions strictly based on CCS (Conduct) Rules, 1964
+const questions = [
+    {
+        type: "Statement",
+        section: "Rule 1: Scope & Application",
+        question: "Consider the following statements regarding the applicability of the CCS (Conduct) Rules, 1964 under Rule 1:",
+        statements: [
+            "a) The rules apply to every person appointed to a civil service or post in connection with the affairs of the Union, including civilians in Defence Services.",
+            "b) The rules apply directly to railway servants and members of an All India Service without any exemption."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Rule 1(3) applies to civil posts/services including defence civilians. Railway servants and All India Services are specifically excluded under Rule 1(3) provisos (a) and (b)."
+    },
+    {
+        type: "Standard",
+        section: "Rule 1: Second Proviso",
+        question: "Under Rule 1(3) second proviso, certain specific rules (e.g., Rules 4, 6, 7, 12, 14, 18, 19, 20, 21) do NOT apply to non-gazetted employees in ports, defence installations, mines, and factories, provided they draw a pay not exceeding:",
+        statements: [],
+        options: [
+            "Rs. 250 per mensem",
+            "Rs. 500 per mensem",
+            "Rs. 1,000 per mensem",
+            "Rs. 1,500 per mensem"
+        ],
+        answer: 1,
+        citation: "Rule 1(3) second proviso specifically exempts non-gazetted industrial/field employees drawing pay not exceeding Rs. 500 per mensem from specific conduct rules."
+    },
+    {
+        type: "Fill in Blanks",
+        section: "Historical Basis",
+        question: "The Central Civil Services (Conduct) Rules, 1964 were revised and framed primarily based on the recommendations of the Committee on Prevention of Corruption headed by ________.",
+        statements: [],
+        options: ["Shri Lal Bahadur Shastri", "Shri K. Santhanam", "Shri S. Chandrasekaran", "Shri P. N. Kirpal"],
+        answer: 1,
+        citation: "The Foreword confirms that the 1964 rules were notified based on the recommendations of the Committee on Prevention of Corruption headed by late Shri K. Santhanam."
+    },
+    {
+        type: "Matching",
+        section: "General Code of Conduct",
+        question: "Match List-I (Rule / Sub-Rule) with List-II (Subject / Provision under CCS Conduct Rules, 1964):",
+        statements: [
+            "(p) Rule 3A -- [1] Prohibition of sexual harassment of working women",
+            "(q) Rule 3B -- [2] Promptness and Courtesy",
+            "(r) Rule 3C -- [3] Observance of Government's policies (wildlife, environment, age of marriage)",
+            "(s) Rule 15A - [4] Sub-letting and vacation of Government accommodation"
+        ],
+        options: [
+            "p-2, q-3, r-1, s-4",
+            "p-3, q-2, r-1, s-4",
+            "p-2, q-1, r-3, s-4",
+            "p-4, q-3, r-1, s-2"
+        ],
+        answer: 0,
+        citation: "Rule 3A = Promptness & Courtesy; Rule 3B = Observance of Govt policies; Rule 3C = Sexual harassment prohibition; Rule 15A = Subletting accommodation."
+    },
+    {
+        type: "Statement",
+        section: "Rule 2: Definitions",
+        question: "Consider the following statements regarding the definition of 'Members of family' under Rule 2(c):",
+        statements: [
+            "a) It includes a spouse separated from the Government servant by a decree or order of a competent Court.",
+            "b) It includes a child or step-child who is wholly dependent on the Government servant, but excludes a child of whose custody the Government servant has been deprived by law."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 1,
+        citation: "Rule 2(c)(i) explicitly excludes a spouse separated by a court decree. Rule 2(c)(ii) includes wholly dependent children but excludes those deprived of custody by law."
+    },
+    {
+        type: "Standard",
+        section: "Rule 3: Oral Instructions",
+        question: "Under Rule 3(2)(iii) and (iv), what is the prescribed statutory procedure regarding oral instructions issued by an official superior to a subordinate?",
+        statements: [],
+        options: [
+            "Oral instructions are completely prohibited in all administrative circumstances",
+            "Oral instructions should be avoided; if unavoidable, the superior must confirm them in writing immediately thereafter, and the subordinate must seek written confirmation as early as possible",
+            "Oral directions can only be confirmed if raised before the Joint Consultative Machinery",
+            "Oral instructions require prior concurrence of the Minister-in-charge before execution"
+        ],
+        answer: 1,
+        citation: "Rule 3(2)(iii)-(iv) mandates avoiding oral instructions, requiring prompt written confirmation by the superior and confirmation-seeking by the subordinate."
+    },
+    {
+        type: "Statement",
+        section: "Rule 3: Explanations",
+        question: "Consider the following statements regarding the Explanations under Rule 3(2) of the Conduct Rules:",
+        statements: [
+            "a) A Government servant who habitually fails to perform assigned tasks within the time set and with expected quality is deemed to be lacking in devotion to duty.",
+            "b) A Government servant is legally empowered to evade personal responsibility by seeking instructions/approvals from a superior when not necessary under distribution of powers."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Explanation I states habitual delay/poor quality is lack of devotion to duty. Explanation II explicitly forbids evading responsibility by seeking unnecessary approvals."
+    },
+    {
+        type: "Standard",
+        section: "Official Protocol for MPs",
+        question: "In the Warrant of Precedence at major state and public functions, where are Members of Parliament placed in relation to civil service officials?",
+        statements: [],
+        options: [
+            "Below Secretaries to the Government of India",
+            "Above officers of the rank of full General, Secretaries to the Government of India, and equivalent (at Article 30)",
+            "Exactly equal to Additional Secretaries to the Government of India",
+            "At the discretion of the District Magistrate"
+        ],
+        answer: 1,
+        citation: "Decision No. 3 under Rule 3 specifies that MPs appear at Article 30 above officers of the rank of full General and Secretaries to the Government of India."
+    },
+    {
+        type: "Fill in Blanks",
+        section: "Dealings with MPs",
+        question: "Under DOPT instructions on official dealings with Members of Parliament, an officer receiving a visiting MP in their office should ________.",
+        statements: [],
+        options: [
+            "remain seated behind the desk to maintain official decorum",
+            "rise in their seat to receive the Member and to see them off",
+            "ask a subordinate Section Officer to conduct the entire interaction",
+            "direct the Member to route all queries exclusively through the Ministry of Law"
+        ],
+        answer: 1,
+        citation: "Decision No. 3 under Rule 3 dictates that an officer should rise in his seat to receive the Member of Parliament and to see him off."
+    },
+    {
+        type: "Matching",
+        section: "Rule 5: Political Associations",
+        question: "Match List-I (Organization / Association) with List-II (Status under Rule 5 regarding Political Neutrality):",
+        statements: [
+            "(p) Rashtriya Swayam Sewak Sangh (R.S.S.) & Jamaat-e-Islami - [1] Permissible with prior permission of Head of Office",
+            "(q) Bharat Sewak Samaj ---------------------------------- [2] Permissible without prior permission, with knowledge of HoD",
+            "(r) Sanyukta Sadachar Samiti ----------------------------- [3] Prohibited; attracts Rule 5(1) disciplinary action",
+            "(s) Anand Marg Movement & its affiliated bodies ----------- [4] Prohibited; attracts Rule 5(1) disciplinary action"
+        ],
+        options: [
+            "p-3, q-1, r-2, s-4",
+            "p-1, q-3, r-2, s-4",
+            "p-3, q-2, r-1, s-4",
+            "p-4, q-1, r-2, s-3"
+        ],
+        answer: 0,
+        citation: "RSS/Jamaat and Anand Marg are banned under Rule 5(1); Bharat Sewak Samaj requires prior permission; Sanyukta Sadachar Samiti requires HoD knowledge only."
+    },
+    {
+        type: "Statement",
+        section: "Honorary Employment in Civil Posts",
+        question: "Consider the following statements regarding the employment of honorary workers in civil posts:",
+        statements: [
+            "a) An honorary worker should be paid a nominal salary of Re. 1 per month specified in the appointment order to bring them within the ambit of Conduct Rules.",
+            "b) In the case of Members of Parliament appointed in an honorary capacity, the nominal salary of Re. 1 per month must be strictly enforced to avoid holding an office of profit under Article 102(1)(a)."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Statement (a) is correct. Statement (b) is false because nominal salary should NOT be enforced for MPs to prevent disqualification under Article 102(1)(a)."
+    },
+    {
+        type: "Standard",
+        section: "Rule 4: Private Employment of Dependents",
+        question: "Under Rule 4(2)(i), when may a Group 'A' officer permit their child or dependent to accept employment in a private company with which the officer has official dealings?",
+        statements: [],
+        options: [
+            "Freely, without any intimation or permission",
+            "Only with the previous sanction of the Government (or provisional acceptance reported immediately if urgent)",
+            "With the permission of the Union Public Service Commission (UPSC)",
+            "Group 'A' dependents are permanently barred from working in any private company"
+        ],
+        answer: 1,
+        citation: "Rule 4(2)(i) requires previous sanction of Government, or immediate reporting if urgent, before a dependent accepts such employment."
+    },
+    {
+        type: "Statement",
+        section: "Rule 5: Elections & Proposing Candidates",
+        question: "Consider the following statements regarding the political rights of a Government servant under Rule 5:",
+        statements: [
+            "a) A Government servant qualified to vote at an election may exercise their franchise, provided they give no indication of how they propose to vote or have voted.",
+            "b) A Government servant is legally permitted to propose or second the nomination paper of a candidate in a parliamentary or legislative election."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Statement (a) is correct (Rule 5(4) proviso). Statement (b) is false because proposing/seconding nomination constitutes taking part in election under Rule 5(4)."
+    },
+    {
+        type: "Standard",
+        section: "Representation of People Act Section 134A",
+        question: "Under Section 134A of the Representation of the People Act, 1951 (highlighted in Conduct Rules instructions), what penalty is prescribed if a person in Government service acts as an election agent, polling agent, or counting agent of a candidate?",
+        statements: [],
+        options: [
+            "Censure only",
+            "Fine of Rs. 500 without imprisonment",
+            "Imprisonment for a term which may extend to three months, or with fine, or with both",
+            "Compulsory retirement on the spot"
+        ],
+        answer: 2,
+        citation: "Section 134A of RPA 1951 punishes acting as election/polling/counting agent with imprisonment up to 3 months, or fine, or both."
+    },
+    {
+        type: "Fill in Blanks",
+        section: "Rule 5(2): Subversive Activities",
+        question: "Under Rule 5(2), where a Government servant is unable to prevent a member of their family from taking part in any subversive movement against the Government, they shall ________.",
+        statements: [],
+        options: [
+            "immediately resign from their post",
+            "lodge an FIR with the local police station",
+            "make a report to that effect to the Government",
+            "place the family member under house arrest"
+        ],
+        answer: 2,
+        citation: "Rule 5(2) mandates that if unable to prevent a family member from assisting subversive movements, the officer shall make a report to the Government."
+    },
+    {
+        type: "Matching",
+        section: "Rule 13: Gift Ceilings",
+        question: "Match List-I (Occasion / Source of Gift) with List-II (Monetary Limit for Reporting/Sanction under Rule 13):",
+        statements: [
+            "(p) Wedding/funeral gift from relatives to Group 'A' officer - [1] Exceeding Rs. 7,000",
+            "(q) Wedding/funeral gift from relatives to Group 'B' officer - [2] Exceeding Rs. 4,000",
+            "(r) General gift from non-relatives to Group 'A' or 'B' ------ [3] Exceeding Rs. 1,500",
+            "(s) Retention of gifts received from foreign dignitaries ---- [4] Market value up to Rs. 1,000"
+        ],
+        options: [
+            "p-1, q-2, r-3, s-4",
+            "p-2, q-1, r-4, s-3",
+            "p-1, q-3, r-2, s-4",
+            "p-4, q-2, r-1, s-3"
+        ],
+        answer: 0,
+        citation: "Rule 13(2): Group A relative gift = Rs 7,000; Group B = Rs 4,000; Rule 13(3): General gift Group A/B = Rs 1,500; Rule 13(4): Foreign gifts = Rs 1,000."
+    },
+    {
+        type: "Statement",
+        section: "Rule 13: Definition of Gift",
+        question: "Consider the following statements regarding the acceptance of gifts under Rule 13:",
+        statements: [
+            "a) Free transport, boarding, and lodging provided by a person having official dealings with a Government servant falls under the definition of a 'gift'.",
+            "b) A casual meal, lift, or other social hospitality is deemed to be a gift requiring prior government sanction."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Rule 13 Explanation includes free boarding/transport as gifts. Note 1 explicitly provides that casual meals, lifts, or social hospitality are NOT gifts."
+    },
+    {
+        type: "Standard",
+        section: "Rule 7: Definition of Strike",
+        question: "Under Rule 7(ii) and clarificatory decisions, which of the following acts is categorized as a 'strike' by Government employees?",
+        statements: [
+            "1. Mass absence from work without permission (under the guise of 'mass casual leave')",
+            "2. Refusal to work overtime where such overtime work is necessary in public interest",
+            "3. 'Go-slow', 'sit-down', 'pen-down', or 'stay-in' actions",
+            "4. Absence from work for participation in a Bandh"
+        ],
+        options: [
+            "1 and 3 only",
+            "1, 2, and 3 only",
+            "2, 3, and 4 only",
+            "1, 2, 3, and 4"
+        ],
+        answer: 3,
+        citation: "Decision No. 2 under Rule 7 explicitly defines strike to include mass casual leave, overtime refusal, go-slow/sit-down/pen-down, and Bandh participation."
+    },
+    {
+        type: "Statement",
+        section: "Participation in Gherao",
+        question: "Consider the following statements regarding participation in 'Gherao' by Central Government servants:",
+        statements: [
+            "a) Absence from work on account of participation in 'Gherao' must in all cases be treated as unauthorized absence involving a break in service and cannot be regularized as leave.",
+            "b) Participation in Gherao is protected under the Trade Unions Act, 1926, and no criminal report can be filed with the police."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Decision No. 3 under Rule 7 mandates that Gherao absence is unauthorized with break in service, and written reports must be made to the police for criminal offenses."
+    },
+    {
+        type: "Standard",
+        section: "Rule 8: Publications and Media",
+        question: "Under Rule 8, under which circumstance can a Government servant publish a book or participate in public media without the previous sanction of the Government?",
+        statements: [],
+        options: [
+            "In the bona fide discharge of their official duties, provided they make it clear that the views expressed are their own",
+            "Whenever they receive financial royalties exceeding Rs. 50,000",
+            "When criticizing a recent policy of a State Government anonymously",
+            "When editing a commercial weekly newspaper in their private capacity"
+        ],
+        answer: 0,
+        citation: "Rule 8(2) & (3) allow publishing a book or participating in media in bona fide discharge of official duties, provided views are stated as personal."
+    },
+    {
+        type: "Fill in Blanks",
+        section: "Rule 9: Criticism of Government",
+        question: "Under Rule 9, no Government servant shall make any public statement or utterance which has the effect of an adverse criticism of any current or recent policy or action of the Central Government or a State Government, provided that this does not apply to ________.",
+        statements: [],
+        options: [
+            "anonymous posts on social media",
+            "statements made in an official capacity or in due performance of duties assigned to them",
+            "public speeches delivered during political election campaigns",
+            "press briefings given to foreign correspondents without clearance"
+        ],
+        answer: 1,
+        citation: "Rule 9 Proviso explicitly excludes statements made or views expressed in official capacity or in due performance of duties."
+    },
+    {
+        type: "Matching",
+        section: "Rule 18: Prescribed Authorities",
+        question: "Match List-I (Prescribed Authority under Rule 18) with List-II (Category of Government Servant):",
+        statements: [
+            "(p) The Government (or specifically designated lower authority) - [1] Group 'B' post holders",
+            "(q) Head of Department ----------------------------------------- [2] Group 'A' post holders",
+            "(r) Head of Office ---------------------------------------------- [3] Group 'C' and Group 'D' post holders",
+            "(s) Parent Cadre Ministry / Department -------------------------- [4] Government servant on foreign service/deputation"
+        ],
+        options: [
+            "p-2, q-1, r-3, s-4",
+            "p-1, q-2, r-4, s-3",
+            "p-2, q-3, r-1, s-4",
+            "p-4, q-1, r-2, s-3"
+        ],
+        answer: 0,
+        citation: "Explanation I(2) below Rule 18: Group A = Government; Group B = Head of Department; Group C/D = Head of Office; Deputationists = Parent Department."
+    },
+    {
+        type: "Statement",
+        section: "Rule 10: Tendering Evidence",
+        question: "Consider the following statements regarding evidence tendered before Committees under Rule 10:",
+        statements: [
+            "a) Previous sanction of the Government is NOT required for giving evidence at an enquiry before an authority appointed by Government, Parliament, or a State Legislature.",
+            "b) While giving sanctioned evidence before a committee, a Government servant is legally free to criticize the policy of the Central or State Government."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Rule 10(3) excludes enquiries by Government/Parliament from prior sanction. Rule 10(2) strictly forbids criticizing Government policy during evidence."
+    },
+    {
+        type: "Standard",
+        section: "Rule 11: Official Information",
+        question: "Under Rule 11 and official instructions regarding communication of official information:",
+        statements: [],
+        options: [
+            "Government servants are permitted to quote internal confidential file notings in their personal service representations",
+            "Disclosing the identity of a superior officer who recorded adverse remarks in an ACR/APAR is mandatory while communicating the remarks to the employee",
+            "Quotation by a Government servant of final orders passed in similar cases is permitted, but quoting uncommunicated notings from files constitutes unauthorized communication under the Official Secrets Act, 1923",
+            "Any non-gazetted official is authorized to brief the press on departmental policy decisions"
+        ],
+        answer: 2,
+        citation: "Decision No. 12 under Rule 3/11 states quoting final orders in similar cases is allowed, but quoting file notings without authorization violates Rule 11 and OSA 1923."
+    },
+    {
+        type: "Statement",
+        section: "Rule 12: Subscriptions & Union Collections",
+        question: "Consider the following statements regarding fund collections under Rule 12:",
+        statements: [
+            "a) Members of a recognized service union may collect subscriptions freely among themselves for union welfare activities without seeking government permission.",
+            "b) A service union is legally permitted to collect defense funds from its members to defend a member against whom disciplinary action is taken in their personal capacity."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Decision No. 2 under Rule 12 permits internal union collections for general welfare, but strictly prohibits collections to defend members facing individual personal disciplinary action."
+    },
+    {
+        type: "Standard",
+        section: "Rule 12: Permitted Fund Collections",
+        question: "For which of the following funds have Central Government servants been granted special relaxation to participate in voluntary collection drives?",
+        statements: [
+            "1. Flag Day collections for the benefit of ex-servicemen",
+            "2. National Defence Fund",
+            "3. National Foundation for Communal Harmony (Fund Raising Week)",
+            "4. Jawaharlal Nehru Memorial Fund"
+        ],
+        options: [
+            "1 and 2 only",
+            "1, 2, and 3 only",
+            "2, 3, and 4 only",
+            "1, 2, 3, and 4"
+        ],
+        answer: 1,
+        citation: "Decisions 3, 4, and 6 relax Rule 12 for Flag Day, NDF, and NFCH. Decision 5 explicitly states collection for Jawaharlal Nehru Memorial Fund is NOT permissible."
+    },
+    {
+        type: "Statement",
+        section: "Rule 13-A: Dowry Prohibition",
+        question: "Consider the following statements regarding Dowry under Rule 13-A:",
+        statements: [
+            "a) Demanding dowry directly or indirectly from the parent/guardian of a bride or bridegroom is strictly prohibited.",
+            "b) Dowry can be accepted without permission if treated as a 'customary gift' under the personal law of the employee."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Rule 13-A strictly bans giving, taking, or demanding dowry. Decision No. 5 clarifies dowry can no longer be treated as a customary gift."
+    },
+    {
+        type: "Standard",
+        section: "Gifts on Retirement vs Transfer",
+        question: "What is the rule governing the acceptance of gifts by a Government servant on the occasion of their transfer or retirement?",
+        statements: [],
+        options: [
+            "Expensive gifts can be accepted from staff on both transfer and retirement",
+            "No gifts of more than trifling value may be accepted at the time of transfer; however, gifts at the time of retirement from staff may be accepted subject to prior permission where necessary",
+            "Gifts are strictly prohibited on retirement but permitted without limit on transfer",
+            "Subscriptions can be collected from Class IV employees to entertain retiring Group 'A' officers"
+        ],
+        answer: 1,
+        citation: "Decision No. 2A under Rule 13 states no gifts above trifling value on transfer, while retirement gifts from staff are permitted subject to prior permission where needed."
+    },
+    {
+        type: "Fill in Blanks",
+        section: "Rule 14: Subscriptions Prohibition",
+        question: "Under Rule 14, collection of subscriptions from Class III or Class IV employees under any circumstances for the entertainment of any Government servant not belonging to Class III or Class IV is ________.",
+        statements: [],
+        options: [
+            "permitted with the prior approval of the Head of Department",
+            "strictly forbidden",
+            "permissible up to Rs. 500 per employee",
+            "allowed if organized by a registered recreation club"
+        ],
+        answer: 1,
+        citation: "Rule 14 Note states that collection of subscriptions from Class III/IV employees under any circumstances for entertainment of non-Class III/IV officers is forbidden."
+    },
+    {
+        type: "Matching",
+        section: "Rule 15: Private Trade & Permissions",
+        question: "Match List-I (Activity / Engagement) with List-II (Sanction Requirement under Rule 15):",
+        statements: [
+            "(p) Undertaking honorary work of a social or charitable nature ------- [1] Previous sanction NOT required (report within 1 month if duty unaffected)",
+            "(q) Holding an elective office in any body or sports federation ------ [2] Previous sanction of the Government is mandatory",
+            "(r) Taking part in management of Co-operative Society for staff benefit [3] Previous sanction of Government NOT required",
+            "(s) Part-time lectureship in an educational institution --------------- [4] Regular remunerative occupation requiring prior Government sanction"
+        ],
+        options: [
+            "p-3, q-2, r-1, s-4",
+            "p-1, q-2, r-3, s-4",
+            "p-3, q-4, r-1, s-2",
+            "p-2, q-1, r-4, s-3"
+        ],
+        answer: 0,
+        citation: "Rule 15(2)(a) = No sanction for social/charitable work; Rule 15(1)(c) = Sanction needed for elective office; Rule 15(2)(e) = No sanction for staff co-op; Decision 5 = Lectureship needs sanction."
+    },
+    {
+        type: "Statement",
+        section: "Sports Bodies Tenure",
+        question: "Consider the following statements regarding the holding of elective offices in sports federations under Rule 15:",
+        statements: [
+            "a) No Government servant should be allowed to hold elective office in any sports federation/association for a term of more than 4 years, or for one term, whichever is less.",
+            "b) A Government servant holding office in a sports body is permitted to raise public funds from official sources."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Decision No. 16 under Rule 15 caps sports office tenure to max 4 years/1 term and strictly forbids raising funds from official/non-official sources."
+    },
+    {
+        type: "Standard",
+        section: "Rule 15A: Subletting Quarters",
+        question: "What is the legal status and consequence of subletting government accommodation under Rule 15A?",
+        statements: [],
+        options: [
+            "Subletting is permitted with prior notice to the Head of Office",
+            "Subletting constitutes per se grave misconduct under Rule 14 of CCS (CCA) Rules, and findings of the Directorate of Estates are binding on the disciplinary authority",
+            "Subletting only attracts double license fee without any disciplinary inquiry",
+            "Subletting is regularized automatically after 3 years"
+        ],
+        answer: 1,
+        citation: "Decision No. 17 under Rule 15A (Supreme Court ruling) mandates that subletting is grave misconduct per se and Estate findings are binding on disciplinary authorities."
+    },
+    {
+        type: "Statement",
+        section: "Rule 16: Speculation & Directors' Quotas",
+        question: "Consider the following statements regarding stock and share investments under Rule 16:",
+        statements: [
+            "a) No Government servant shall speculate in any stock, share, or other investment; frequent purchase or sale of shares is deemed to be speculation.",
+            "b) Purchasing shares out of the quotas reserved for Directors of Companies or their friends and associates is deemed an investment likely to embarrass the Government servant."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Rule 16(1) forbids speculation (frequent share trading); Rule 16(2)(i) treats buying director quota shares as an investment likely to embarrass."
+    },
+    {
+        type: "Standard",
+        section: "Rule 16(4): Lending and Borrowing",
+        question: "Under Rule 16(4), which of the following private financial transactions is PERMISSIBLE for a Government servant without previous government sanction?",
+        statements: [],
+        options: [
+            "Lending money to a private firm within the local limits of their authority at commercial interest",
+            "Giving to or accepting from a relative or personal friend a purely temporary loan of a small amount free of interest",
+            "Accepting a loan from a private contractor having official dealings with the department",
+            "Operating an unauthorized chit fund business"
+        ],
+        answer: 1,
+        citation: "Rule 16(4)(i) Proviso permits purely temporary small interest-free loans to/from relatives or personal friends, and normal banking transactions."
+    },
+    {
+        type: "Statement",
+        section: "Standing Surety for Superiors",
+        question: "Consider the following statements regarding standing surety under Rule 16:",
+        statements: [
+            "a) Senior officers are cautioned not to approach their subordinate employees for standing surety for loans taken from private sources.",
+            "b) A subordinate standing surety for a superior officer is given statutory immunity against loan recovery."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Decision No. 2 under Rule 16 cautions senior officers against asking subordinates to stand surety. No statutory immunity exists for sureties."
+    },
+    {
+        type: "Standard",
+        section: "Rule 17: Burden of Proof",
+        question: "Under Rule 17 (Insolvency and Habitual Indebtedness), upon whom does the burden of proof lie to establish that insolvency was due to unforeseen circumstances and not extravagant habits?",
+        statements: [],
+        options: [
+            "The Disciplinary Authority",
+            "The Government Servant",
+            "The Creditor",
+            "The Central Vigilance Commission"
+        ],
+        answer: 1,
+        citation: "Rule 17 Note explicitly establishes that the burden of proving that insolvency was beyond control and not from extravagant habits rests upon the Government servant."
+    },
+    {
+        type: "Statement",
+        section: "Rule 18: AIPR Submission",
+        question: "Consider the following statements regarding the submission of Annual Immovable Property Returns (AIPR) under Rule 18(1)(ii):",
+        statements: [
+            "a) Every Government servant holding a Group 'A' and Group 'B' post must submit an annual return of immovable property in January every year for the preceding calendar year.",
+            "b) Non-submission or delayed submission of the AIPR constitutes good and sufficient reason for instituting disciplinary proceedings."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Rule 18(1)(ii) and Decision No. 33 mandate annual immovable property returns by 31st January, and failure to submit constitutes good reason for disciplinary action."
+    },
+    {
+        type: "Standard",
+        section: "Rule 18(3): Movable Property Reporting",
+        question: "Under Rule 18(3), within what timeframe must a Government servant report a movable property transaction exceeding the prescribed financial threshold to the prescribed authority?",
+        statements: [],
+        options: [
+            "Within 15 days of the transaction",
+            "Within one month from the date of the transaction",
+            "Within 60 days of the transaction",
+            "In the next annual property return only"
+        ],
+        answer: 1,
+        citation: "Rule 18(3) requires reporting movable property transactions exceeding prescribed limits within one month from the date of such transaction."
+    },
+    {
+        type: "Statement",
+        section: "Rule 18: Official Dealings Sanction",
+        question: "Consider the following statements regarding transactions with persons having official dealings under Rule 18:",
+        statements: [
+            "a) Previous sanction of the prescribed authority is mandatory for acquiring/disposing of immovable property if the transaction is with a person having official dealings.",
+            "b) Transactions in movable property with a person having official dealings require only an ex-post-facto intimation within 6 months."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Provisos to Rule 18(2) and 18(3) require PREVIOUS SANCTION for both immovable and movable property transactions if conducted with persons having official dealings."
+    },
+    {
+        type: "Standard",
+        section: "Share Market Cumulative Reporting",
+        question: "What is the prescribed monetary threshold under DOPT instructions for reporting cumulative annual transactions in shares, debentures, and mutual funds for Group 'A' and Group 'B' officers?",
+        statements: [],
+        options: [
+            "If total transactions exceed Rs. 25,000 during the calendar year",
+            "If total transactions exceed Rs. 50,000 during the calendar year",
+            "If total transactions exceed Rs. 1,00,000 during the calendar year",
+            "If total transactions exceed six months' basic pay"
+        ],
+        answer: 1,
+        citation: "Decision No. 32 under Rule 18 mandates annual reporting if cumulative share/mutual fund transactions exceed Rs. 50,000 for Group A & B (Rs. 25,000 for Group C & D)."
+    },
+    {
+        type: "Statement",
+        section: "Family Funds vs Employee Funds",
+        question: "Consider the following statements regarding transactions made out of funds of the spouse/dependents:",
+        statements: [
+            "a) Transactions entered into by the spouse or family members out of their own funds (stridhan, inheritance) in their own name do NOT attract Rule 18(2) and 18(3).",
+            "b) All transactions in immovable property made out of the Government servant's funds, even if registered in the name of a family member, strictly require compliance with Rule 18."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Decision No. 26 and Decision No. 9 clarify that family members' own funds transactions do not attract Rule 18(2)/(3), but transactions funded by the employee always do."
+    },
+    {
+        type: "Standard",
+        section: "Rule 18-A: Foreign Property",
+        question: "Under Rule 18-A, what restriction applies to transactions involving immovable property situated outside India or transactions with foreigners?",
+        statements: [],
+        options: [
+            "Intimation within 30 days is sufficient",
+            "Previous sanction of the prescribed authority is mandatory for acquiring, disposing, or leasing any such immovable property",
+            "Transactions are prohibited permanently without any possibility of sanction",
+            "Sanction is required only if the value exceeds Rs. 10 Lakhs"
+        ],
+        answer: 1,
+        citation: "Rule 18-A mandates that previous sanction of the prescribed authority is required for acquiring, disposing, or leasing property outside India or with foreigners."
+    },
+    {
+        type: "Statement",
+        section: "Time Limits for Prior Sanction",
+        question: "Consider the following statements regarding the time-limit for government response under Conduct Rules (Decision No. 25 under Rule 18):",
+        statements: [
+            "a) For requests under Rules 8(2), 13(4), 18(2), 18(3), and 18-A, the prescribed time limit for granting or refusing permission is 30 days.",
+            "b) If no decision is communicated within the prescribed time limit, the Government servant is legally free to assume that permission has been granted."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Decision No. 25 prescribes 30 days for property/gift permissions and provides that failure to communicate within time allows assuming deemed permission."
+    },
+    {
+        type: "Standard",
+        section: "Rule 19: Vindication of Official Acts",
+        question: "Under Rule 19(1), what is the deemed permission timeframe if a Government servant applies for previous sanction to have recourse to a Court or the Press to vindicate an official act subject to defamatory attack?",
+        statements: [],
+        options: ["30 days", "6 weeks", "3 months", "6 months"],
+        answer: 2,
+        citation: "Rule 19(1) Proviso provides that if no sanction is received within 3 months, the Government servant is free to assume permission has been granted."
+    },
+    {
+        type: "Statement",
+        section: "Rule 19: Intimation of Conviction",
+        question: "Consider the following statements regarding criminal convictions of Government servants under Rule 19:",
+        statements: [
+            "a) It is the mandatory duty of a convicted Government servant to inform their departmental superiors of the conviction and connected circumstances promptly.",
+            "b) Failure to inform superiors of conviction is treated as suppression of material information and justifies disciplinary action on that ground alone."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Decision No. 1 under Rule 19 mandates immediate reporting of criminal convictions; failure to report constitutes independent misconduct of suppression."
+    },
+    {
+        type: "Standard",
+        section: "Rule 19(2): Vindicating Private Character",
+        question: "When a Government servant seeks to vindicate their private character or private acts in a Court of Law under Rule 19(2):",
+        statements: [],
+        options: [
+            "Previous sanction of the Government must be obtained beforehand",
+            "No prior sanction is necessary, but the Government servant shall submit a report to the prescribed authority regarding such action",
+            "Government will reimburse 100% of the private litigation expenses",
+            "Private legal action is permanently barred during service"
+        ],
+        answer: 1,
+        citation: "Rule 19(2) allows vindicating private character without prior sanction, requiring only submitting a report to the prescribed authority."
+    },
+    {
+        type: "Statement",
+        section: "Foreign Private Travel Proforma",
+        question: "Consider the following statements regarding private foreign travel guidelines (DOPT OM 2004):",
+        statements: [
+            "a) A Government servant must obtain prior permission before leaving headquarters for private visits abroad.",
+            "b) In the prescribed proforma for foreign visits, details of previous private foreign travel undertaken during the last 4 years must be furnished."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 2,
+        citation: "Decisions 23B & 23C require prior permission for foreign private travel and mandate reporting past private foreign travel of the last 4 years."
+    },
+    {
+        type: "Standard",
+        section: "High-Level Complaints Committee",
+        question: "In case of complaints of sexual harassment against officers of the level of Secretary and Additional Secretary in the Government of India, which Complaints Committee has jurisdiction to inquire (Cabinet Secretariat Order 2008)?",
+        statements: [],
+        options: [
+            "The Internal Committee of the concerned Ministry headed by a Deputy Secretary",
+            "A special Complaints Committee constituted in terms of Cabinet Secretariat Order No. 1 serviced by the Cabinet Secretariat",
+            "The Central Vigilance Commission exclusively",
+            "The National Commission for Women directly"
+        ],
+        answer: 1,
+        citation: "Decision No. 25D under Rule 3 clarifies that complaints against Secretary/Addl Secretary are inquired by the Committee constituted under Cabinet Secretariat Order No. 1."
+    },
+    {
+        type: "Statement",
+        section: "Complaints Committee Status",
+        question: "Consider the following statements regarding the status of the report of the Complaints Committee on sexual harassment:",
+        statements: [
+            "a) In terms of Rule 14(2) of CCS (CCA) Rules, 1965, the Complaints Committee is deemed to be the Inquiring Authority appointed by the Disciplinary Authority.",
+            "b) The report of the Complaints Committee is treated merely as a preliminary report and a second regular inquiry must be conducted by another inquiry officer."
+        ],
+        options: ["Only a", "Only b", "Both a and b", "Neither a nor b"],
+        answer: 0,
+        citation: "Statement (a) is correct (Rule 14(2) proviso). Statement (b) is false because the Supreme Court in Medha Kotwal Lele ruled that the report is a final inquiry report, not preliminary."
+    },
+    {
+        type: "Standard",
+        section: "Accountability & Dilatory Tactics",
+        question: "Under DOPT orders regarding promptness and dilatory tactics, what is the impact of habitual delays in decision-making by an officer?",
+        statements: [],
+        options: [
+            "It is treated as an ordinary administrative oversight without penal consequence",
+            "It constitutes a lack of devotion to duty under Rule 3 and discourtesy/dilatory tactics under Rule 3A, providing 'good and sufficient reasons' for initiating disciplinary proceedings under Rule 11 of CCS (CCA) Rules",
+            "Disciplinary action can only be initiated if pecuniary bribery is proved",
+            "The officer is given an automatic promotion freeze for 10 years without charge-sheet"
+        ],
+        answer: 1,
+        citation: "Decision No. 26 under Rule 3 confirms that dilatory tactics and willful delays violate Rules 3 and 3A, justifying penalties under Rule 11 of CCA Rules."
+    }
+];
+
+const prizeLadder = [
+    "₹1,00,000", "₹2,00,000", "₹5,00,000", "₹10,00,000", "₹25,00,000",
+    "₹50,00,000", "₹1 Crore", "₹2 Crore", "₹5 Crore", "₹10 Crore",
+    "₹12 Crore", "₹15 Crore", "₹18 Crore", "₹20 Crore", "₹25 Crore",
+    "₹30 Crore", "₹35 Crore", "₹40 Crore", "₹45 Crore", "₹50 Crore",
+    "₹55 Crore", "₹60 Crore", "₹65 Crore", "₹70 Crore", "₹75 Crore",
+    "₹80 Crore", "₹85 Crore", "₹90 Crore", "₹95 Crore", "₹100 Crore",
+    "₹105 Crore", "₹110 Crore", "₹115 Crore", "₹120 Crore", "₹125 Crore",
+    "₹130 Crore", "₹135 Crore", "₹140 Crore", "₹145 Crore", "₹150 Crore",
+    "₹155 Crore", "₹160 Crore", "₹165 Crore", "₹170 Crore", "₹175 Crore",
+    "₹180 Crore", "₹185 Crore", "₹190 Crore", "₹195 Crore", "₹200 Crore"
+];
+
+let currentQ = 0;
+let userAnswers = new Array(questions.length).fill(null);
+let hasMadeWrongAnswer = false; // Tracks if a wrong answer has been given to set prize to ₹0
+let lifelines = { fiftyFifty: true, poll: true, expert: true };
+
+function initQuiz() {
+    renderPrizeTracker();
+    loadQuestion();
+}
+
+function renderPrizeTracker() {
+    const container = document.getElementById("prize-tracker");
+    container.innerHTML = "";
+    prizeLadder.forEach((prize, index) => {
+        const step = document.createElement("div");
+        const isAnswered = userAnswers[index] !== null;
+        const isCurrent = (index === currentQ);
+        
+        let statusClass = "";
+        if (isCurrent) {
+            statusClass = "active";
+        } else if (isAnswered) {
+            statusClass = (userAnswers[index] === questions[index].answer) ? "passed-correct" : "passed-wrong";
+        }
+
+        // If any wrong answer occurred, display ₹0 in the ladder for current/subsequent or show crossed prize
+        let displayPrize = prize;
+        if (hasMadeWrongAnswer && isAnswered && userAnswers[index] !== questions[index].answer) {
+            displayPrize = "₹0";
+        }
+
+        step.className = `prize-step ${statusClass}`;
+        step.innerHTML = `<span>Q${index + 1}</span> <span>${displayPrize}</span>`;
+        container.appendChild(step);
+    });
+}
+
+function loadQuestion() {
+    const q = questions[currentQ];
+    document.getElementById("q-number").innerText = `Question ${currentQ + 1} of 50 (${q.section})`;
+    document.getElementById("pattern-badge").innerText = `${q.type} Pattern`;
+    
+    // Check current prize status based on wrong answers
+    if (hasMadeWrongAnswer) {
+        document.getElementById("q-prize").innerText = `Current Prize: ₹0`;
+    } else {
+        document.getElementById("q-prize").innerText = `Current Prize Level: ${prizeLadder[currentQ]}`;
+    }
+
+    document.getElementById("q-text").innerText = q.question;
+    
+    const stmtContainer = document.getElementById("q-statements");
+    stmtContainer.innerHTML = "";
+    if (q.statements && q.statements.length > 0) {
+        q.statements.forEach(stmt => {
+            const div = document.createElement("div");
+            div.innerText = stmt;
+            stmtContainer.appendChild(div);
+        });
+    }
+
+    const optContainer = document.getElementById("options-container");
+    optContainer.innerHTML = "";
+
+    const isAnswered = userAnswers[currentQ] !== null;
+    const selectedIdx = userAnswers[currentQ];
+
+    q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.id = `opt-${idx}`;
+        btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+        
+        if (isAnswered) {
+            btn.disabled = true;
+            if (idx === q.answer) {
+                btn.classList.add("correct");
+            } else if (idx === selectedIdx) {
+                btn.classList.add("wrong");
+            }
+        } else {
+            btn.onclick = () => selectOption(idx);
+        }
+        optContainer.appendChild(btn);
+    });
+
+    const expBox = document.getElementById("explanation-box");
+    const expText = document.getElementById("explanation-text");
+    if (isAnswered) {
+        expText.innerText = q.citation;
+        expBox.style.display = "block";
+    } else {
+        expBox.style.display = "none";
+    }
+
+    // Navigation buttons state
+    document.getElementById("prev-btn").disabled = (currentQ === 0);
+    document.getElementById("next-btn").disabled = !isAnswered;
+
+    renderPrizeTracker();
+}
+
+function selectOption(selectedIdx) {
+    if (userAnswers[currentQ] !== null) return;
+    
+    userAnswers[currentQ] = selectedIdx;
+    const q = questions[currentQ];
+    const correctIdx = q.answer;
+
+    const optBtns = document.querySelectorAll(".option-btn");
+    optBtns.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (idx === correctIdx) {
+            btn.classList.add("correct");
+        } else if (idx === selectedIdx) {
+            btn.classList.add("wrong");
+        }
+    });
+
+    // Check if the answer is wrong
+    if (selectedIdx !== correctIdx) {
+        hasMadeWrongAnswer = true;
+        document.getElementById("q-prize").innerText = `Current Prize: ₹0 (Wrong Answer)`;
+    } else {
+        if (!hasMadeWrongAnswer) {
+            document.getElementById("q-prize").innerText = `Current Prize Level: ${prizeLadder[currentQ]}`;
+        }
+    }
+
+    const expBox = document.getElementById("explanation-box");
+    const expText = document.getElementById("explanation-text");
+    expText.innerText = q.citation;
+    expBox.style.display = "block";
+
+    document.getElementById("next-btn").disabled = false;
+    renderPrizeTracker();
+}
+
+function prevQuestion() {
+    if (currentQ > 0) {
+        currentQ--;
+        loadQuestion();
+    }
+}
+
+function nextQuestion() {
+    if (currentQ < questions.length - 1) {
+        currentQ++;
+        loadQuestion();
+    } else {
+        showFinalSummary();
+    }
+}
+
+function showFinalSummary() {
+    let rightCount = 0;
+    let wrongCount = 0;
+    let unattempted = 0;
+
+    userAnswers.forEach((ans, idx) => {
+        if (ans === null) {
+            unattempted++;
+        } else if (ans === questions[idx].answer) {
+            rightCount++;
+        } else {
+            wrongCount++;
+        }
+    });
+
+    const finalPrizeWon = (wrongCount === 0 && unattempted === 0) ? "₹200 Crore" : "₹0";
+
+    const bodyHtml = `
+        <p>You have completed the entire 50-Question Master Quiz on CCS (Conduct) Rules, 1964.</p>
+        <div class="score-card">
+            <div class="score-item">
+                <span>Total Right ✅</span>
+                <span class="score-val-right">${rightCount}</span>
+            </div>
+            <div class="score-item">
+                <span>Total Wrong ❌</span>
+                <span class="score-val-wrong">${wrongCount}</span>
+            </div>
+        </div>
+        <p style="margin-top: 15px; font-size: 1.05rem; font-weight: bold; color: var(--accent-gold);">
+            Final Prize Won: ${finalPrizeWon}
+        </p>
+        <p style="margin-top: 5px; font-size: 0.88rem; color: #94a3b8;">
+            Total Questions: 50 | Attempted: ${rightCount + wrongCount} | Unattempted: ${unattempted}
+        </p>
+    `;
+
+    document.getElementById("modal-title").innerText = "Quiz Performance Summary";
+    document.getElementById("modal-body").innerHTML = bodyHtml;
+    document.getElementById("modal-close-btn").innerText = "Review All Questions";
+    document.getElementById("info-modal").style.display = "flex";
+}
+
+function useFiftyFifty() {
+    if (!lifelines.fiftyFifty || userAnswers[currentQ] !== null) return;
+    lifelines.fiftyFifty = false;
+    document.getElementById("life-5050").disabled = true;
+
+    const correctIdx = questions[currentQ].answer;
+    let removed = 0;
+    for (let i = 0; i < 4; i++) {
+        if (i !== correctIdx && removed < 2) {
+            const el = document.getElementById(`opt-${i}`);
+            if (el) el.style.visibility = "hidden";
+            removed++;
+        }
+    }
+}
+
+function useAudiencePoll() {
+    if (!lifelines.poll || userAnswers[currentQ] !== null) return;
+    lifelines.poll = false;
+    document.getElementById("life-poll").disabled = true;
+
+    const correctIdx = questions[currentQ].answer;
+    let votes = [10, 10, 10, 10];
+    votes[correctIdx] = 70;
+
+    let resultMsg = "Audience Poll Verdict:<br><br>";
+    votes.forEach((v, i) => {
+        resultMsg += `<strong>Option ${String.fromCharCode(65 + i)}:</strong> ${v}%<br>`;
+    });
+
+    showModal("Audience Poll", resultMsg);
+}
+
+function useAskExpert() {
+    if (!lifelines.expert || userAnswers[currentQ] !== null) return;
+    lifelines.expert = false;
+    document.getElementById("life-expert").disabled = true;
+
+    const correctOption = String.fromCharCode(65 + questions[currentQ].answer);
+    const sec = questions[currentQ].section;
+    
+    showModal("Ask The Expert", `Expert Guidance: "According to the statutory provisions of <strong>${sec}</strong> under the CCS (Conduct) Rules 1964, the correct answer is <strong>Option ${correctOption}</strong>."`);
+}
+
+function showModal(title, body) {
+    document.getElementById("modal-title").innerHTML = title;
+    document.getElementById("modal-body").innerHTML = body;
+    document.getElementById("modal-close-btn").innerText = "Continue";
+    document.getElementById("info-modal").style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("info-modal").style.display = "none";
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
